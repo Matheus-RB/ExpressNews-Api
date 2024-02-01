@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class News extends Model
+class Subcomment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
-        'category_id',
-        'user_id'
+        'comment_id',
+        'user_id',
+        'content'
     ];
+
+    public function likes()
+    {
+        return $this->hasMany(SubcommentLike::class);
+    }
 }

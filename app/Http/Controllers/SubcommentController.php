@@ -2,109 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Comment;
+use App\Models\Subcomment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CommentController extends Controller
+class SubcommentController extends Controller
 {
-    public Comment $comment;
+    public Subcomment $subcomment;
 
-    public function __construct(Comment $comment)
+    public function __construct(Subcomment $subcomment)
     {
-        $this->comment = $comment;
+        $this->subcomment = $subcomment;
     }
 
     public function index()
     {
-        $comments = $this->comment->all();
-        return response()->json($comments);
+        $subcomment = $this->subcomment->all();
+        return response()->json($subcomment);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'news_id' => 'required|exists:news,id',
+            'comment_id' => 'required|exists:comments,id',
             'user_id' => 'required|exists:users,id',
             'content' => 'required|string',
         ]);
 
-        if(Auth::id() != $request->user_id) {
+        if (Auth::id() != $request->user_id) {
             return response()->json(['message' => 'O autor não é a mesma pessoa que está fazendo a requisição.'], 403);
         }
 
-        $comment = $this->comment->create($request->all());
-        return response()->json($comment, 201);
+        $subcomment = $this->subcomment->create($request->all());
+        return response()->json($subcomment, 201);
     }
 
     public function show(string $id)
     {
-        $comment = $this->comment->find($id);
+        $subcomment = $this->subcomment->find($id);
 
-        if (!$comment) {
+        if (!$subcomment) {
             return response()->json(['message' => 'Comentario não encontrado.'], 404);
         }
 
-        return response()->json($comment);
+        return response()->json($subcomment);
     }
 
     public function update(Request $request, string $id)
     {
-        $comment = $this->comment->find($id);
+        $subcomment = $this->subcomment->find($id);
 
-        if (!$comment) {
+        if (!$subcomment) {
             return response()->json(['message' => 'Comentário não encontrado.'], 404);
         }
 
-        if (Auth::id() == $comment->user_id) {
+        if (Auth::id() == $subcomment->user_id) {
             $request->validate([
                 'content' => 'required|string',
             ]);
 
-            $comment->update([
+            $subcomment->update([
                 'content' => $request->input('content'),
             ]);
 
-            return response()->json($comment);
+            return response()->json($subcomment);
         } else {
             return response()->json(['message' => 'Você não tem permissão para atualizar as informações deste comentário'], 403);
         }
     }
 
-
     public function destroy(string $id)
     {
-        $comment = $this->comment->find($id);
+        $subcomment = $this->subcomment->find($id);
 
-        if (!$comment) {
-            return response()->json(['message' => 'Comentario não encontrado.'], 404);
+        if (!$subcomment) {
+            return response()->json(['message' => 'Comentário não encontrado.'], 404);
         }
 
-        if (Auth::id() == $comment->user_id) {
-            $comment->delete();
+        if (Auth::id() == $subcomment->user_id) {
+            $subcomment->delete();
 
-            return response()->json(['message' => 'Comentario excluído com sucesso.']);
+            return response()->json(['message' => 'Comentário excluído com sucesso.']);
         } else {
-            return response()->json(['message' => 'Você não tem permissão para excluir este comentário'], 403);
+            return response()->json(['message' => 'Você não tem permissão para excluir este Comentário'], 403);
         }
     }
 
     public function like($id)
     {
-        $comment = $this->comment->find($id);
+        $subcomment = $this->subcomment->find($id);
 
-        if (!$comment) {
+        if (!$subcomment) {
             return response()->json(['message' => 'Comentário não encontrado.'], 404);
         }
 
-        $existingLike = $comment->likes()->where('user_id', Auth::id())->first();
+        $existingLike = $subcomment->likes()->where('user_id', Auth::id())->first();
 
         if ($existingLike) {
             $existingLike->delete();
             $message = 'Like removido com sucesso.';
         } else {
-            $comment->likes()->create(['user_id' => Auth::id()]);
+            $subcomment->likes()->create(['user_id' => Auth::id()]);
             $message = 'Like adicionado com sucesso.';
         }
 

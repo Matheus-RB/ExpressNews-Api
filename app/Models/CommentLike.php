@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class News extends Model
+class CommentLike extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
-        'category_id',
+        'comment_id',
         'user_id'
     ];
+
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class);
+    }
 }
