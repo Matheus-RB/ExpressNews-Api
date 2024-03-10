@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Categorie;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CategorieController extends Controller
+class CategoryController extends Controller
 {
-    public Categorie $categorie;
+    public Category $category;
 
-    public function __construct(Categorie $categorie)
+    public function __construct(Category $category)
     {
-        $this->categorie = $categorie;
+        $this->category = $category;
     }
 
     public function index()
     {
-        $categories = $this->categorie->all();
+        $categories = $this->category->all();
         return response()->json($categories);
     }
 
@@ -29,9 +29,9 @@ class CategorieController extends Controller
                 'name' => 'required|string|max:15'
             ]);
 
-            $categorie = $this->categorie->create($request->all());
+            $category = $this->category->create($request->all());
 
-            return response()->json($categorie, 201);
+            return response()->json($category, 201);
         } else {
             return response()->json(['message' => 'Você não tem permissão para criar uma categoria'], 403);
         }
@@ -39,14 +39,14 @@ class CategorieController extends Controller
 
     public function show(string $id)
     {
-        $categorie = $this->categorie->find($id);
+        $category = $this->category->find($id);
 
-        if(!$categorie) {
+        if(!$category) {
             return response()->json(['message' => 'Usuário não encontrado.'], 404);
         }
 
         if (Auth::user()->role === 'admin') {
-            return response()->json($categorie);
+            return response()->json($category);
         } else {
             return response()->json(['message' => 'Você não tem permissão para visualizar esta categoria'], 403);
         }
@@ -54,9 +54,9 @@ class CategorieController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $categorie = $this->categorie->find($id);
+        $category = $this->category->find($id);
 
-        if (!$categorie) {
+        if (!$category) {
             return response()->json(['message' => 'Categoria não encontrada.'], 404);
         }
 
@@ -65,9 +65,9 @@ class CategorieController extends Controller
                 'name' => 'required|string|max:15'
             ]);
 
-            $categorie->update($request->all());
+            $category->update($request->all());
 
-            return response()->json($categorie);
+            return response()->json($category);
         } else {
             return response()->json(['message' => 'Você não tem permissão para atualizar as informações desta categoria'], 403);
         }
@@ -75,14 +75,14 @@ class CategorieController extends Controller
 
     public function destroy(string $id)
     {
-        $categorie = $this->categorie->find($id);
+        $category = $this->category->find($id);
 
-        if (!$categorie) {
+        if (!$category) {
             return response()->json(['message' => 'Categoria não encontrada.'], 404);
         }
 
         if (Auth::user()->role === 'admin') {
-            $categorie->delete();
+            $category->delete();
 
             return response()->json(['message' => 'Categoria excluída com sucesso.']);
         } else {

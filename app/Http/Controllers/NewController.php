@@ -30,46 +30,52 @@ class NewController extends Controller
 
     public function index()
     {
-        $news = $this->new->all();
-        return response()->json($news);
-    }
+        $news = News::with('categorie')->get()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'category' => $item->categorie->name,
+                'slug' => $item->slug,
+                'created_at' => $item->created_at
+            ];
+        });
 
+        return $news;
+    }
     public function store(Request $request)
     {
-        // Validar os dados da requisição
         $request->validate([
             'title' => 'required|string',
-            'content' => 'required|string|min:150',
-            'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|exists:users,id',
+            'content' => 'required|string',//|min:150
+            'category_id' => 'required|exists:categories,id'
         ]);
 
         try {
-            // Aqui, você pode usar o método create para criar a notícia
-            $noticia = News::create([
+            $noticia = $this->new::create([
                 'title' => $request->input('title'),
                 'content' => $request->input('content'),
                 'category_id' => $request->input('category_id'),
-                'user_id' => $request->input('user_id'),
+                'user_id' => Auth::id(),
             ]);
 
-            return response()->json(['message' => 'Notícia criada com sucesso', 'data' => $noticia], 201);
+            return response()->json(['message' => 'Notícia criada com sucesso.', 'data' => $noticia], 201);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Categoria ou usuário não encontrado'], 404);
+            return response()->json(['message' => 'Categoria ou usuário não encontrado.'], 404);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao criar a notícia', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Erro ao criar a notícia.', 'error' => $e->getMessage()], 500);
         }
     }
 
-    public function show(string $id)
+    public function show(string $slug)
     {
-        $new = $this->new->find($id);
+      $new = $this->new::with('categorie:id,name')->where('slug', $slug)->firstOrFail();
+      return $new;
+    }
 
-        if (!$new) {
-            return response()->json(['message' => 'Noticia não encontrada.'], 404);
-        }
-
-        return response()->json($new);
+    public function showId(string $id)
+    {
+      $new = $this->new->findOrFail($id);
+      return $new;
     }
 
     public function update(Request $request, string $id)

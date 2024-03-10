@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewController;
 use App\Http\Controllers\SubcommentController;
@@ -12,10 +12,10 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/users', [UserController::class, 'store']);
 
-Route::get('/categories', [CategorieController::class, 'index']);
+Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::get('/news', [NewController::class, 'index']);
-Route::get('/news/{id}', [NewController::class, 'show']);
+Route::get('/news/{slug}', [NewController::class, 'show']);
 
 Route::get('/comment', [CommentController::class, 'index']);
 Route::get('/comment/{id}', [CommentController::class, 'show']);
@@ -31,15 +31,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
     // Categories
-    Route::post('/categories', [CategorieController::class, 'store']);
-    Route::put('/categories/{id}', [CategorieController::class, 'update']);
-    Route::get('/categories/{id}', [CategorieController::class, 'show']);
-    Route::delete('/categories/{id}', [CategorieController::class, 'destroy']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    Route::get('/categories/{id}', [CategoryController::class, 'show']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
     // News
     Route::post('/news', [NewController::class, 'store']);
     Route::put('/news/{id}', [NewController::class, 'update']);
     Route::delete('/news/{id}', [NewController::class, 'destroy']);
+    Route::get('/news/{id}/id', [NewController::class, 'showId']);
 
     // Comments
     Route::post('/comment', [CommentController::class, 'store']);
