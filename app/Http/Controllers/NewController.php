@@ -85,7 +85,6 @@ class NewController extends Controller
             'title' => 'required|string',
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|exists:users,id',
         ]);
 
         try {
@@ -97,7 +96,6 @@ class NewController extends Controller
                 'title' => $request->input('title'),
                 'content' => $request->input('content'),
                 'category_id' => $request->input('category_id'),
-                'user_id' => $request->input('user_id'),
             ]);
 
             return response()->json(['message' => 'Notícia atualizada com sucesso', 'data' => $noticia], 200);
