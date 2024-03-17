@@ -80,24 +80,19 @@ class NewController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // Validar os dados da requisição
         $request->validate([
             'title' => 'required|string',
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|exists:users,id',
         ]);
 
         try {
-            // Buscar a notícia pelo ID
             $noticia = News::findOrFail($id);
 
-            // Atualizar os dados da notícia
             $noticia->update([
                 'title' => $request->input('title'),
                 'content' => $request->input('content'),
                 'category_id' => $request->input('category_id'),
-                'user_id' => $request->input('user_id'),
             ]);
 
             return response()->json(['message' => 'Notícia atualizada com sucesso', 'data' => $noticia], 200);
