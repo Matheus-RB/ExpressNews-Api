@@ -8,26 +8,34 @@ use Illuminate\Support\Str;
 
 class News extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $fillable = [
-        'title',
-        'content',
-        'category_id',
-        'user_id'
-    ];
+  protected $fillable = [
+    'category_id',
+    'content',
+    'introductory_paragraph',
+    'image_description',
+    'user_id',
+    'title',
+    'main_image'
+  ];
 
-    protected static function boot()
-    {
-        parent::boot();
+  protected static function boot()
+  {
+    parent::boot();
 
-        static::saving(function ($news) {
-            $news->slug = Str::slug($news->title);
-        });
-    }
+    static::saving(function ($news) {
+      $news->slug = Str::slug($news->title);
+    });
+  }
 
-    public function categorie()
-    {
-        return $this->belongsTo(Category::class, 'category_id'); // 'category_id' é o nome da chave estrangeira
-    }
+  public function categorie()
+  {
+    return $this->belongsTo(Category::class, 'category_id');
+  }
+
+  public function user()
+  {
+    return $this->belongsTo(User::class, 'user_id');
+  }
 }

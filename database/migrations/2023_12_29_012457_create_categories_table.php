@@ -7,31 +7,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-      Schema::create('categories', function (Blueprint $table) {
-          $table->id();
-          $table->string('name');
-          $table->timestamps();
-      });
+  public function up(): void
+  {
+    Schema::create('categories', function (Blueprint $table) {
+      $table->id();
+      $table->string('name');
+      $table->timestamps();
+    });
 
-      DB::table('categories')->insert([
-        ['name'=> 'Ciência'],
-        ['name'=> 'Economia'],
-        ['name'=> 'Esportes'],
-        ['name'=> 'Internacional'],
-        ['name'=> 'Política'],
-      ]);
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('categories');
-    }
+    DB::table('categories')->insert([
+      ['name' => 'Ciência', 'created_at' => now()],
+      ['name' => 'Economia', 'created_at' => now()],
+      ['name' => 'Esportes', 'created_at' => now()],
+      ['name' => 'Internacional', 'created_at' => now()],
+      ['name' => 'Política', 'created_at' => now()],
+    ]);
+  }
+  public function down(): void
+  {
+    Schema::dropIfExists('categories');
+  }
 };
