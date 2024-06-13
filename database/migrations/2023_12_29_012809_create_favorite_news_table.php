@@ -6,24 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('favorite_news', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('news_id')->constrained();
-            $table->foreignId('user_id')->constrained();
-            $table->timestamps();
-        });
-    }
+  public function up(): void
+  {
+    Schema::create('favorite_news', function (Blueprint $table) {
+      $table->id();
+      $table->foreignId('news_id')->constrained();
+      $table->foreignId('user_id')->constrained();
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('favorite_news');
-    }
+  public function down(): void
+  {
+    Schema::dropIfExists('favorite_news');
+  }
 };
